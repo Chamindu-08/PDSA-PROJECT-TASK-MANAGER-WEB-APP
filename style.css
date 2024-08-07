@@ -119,13 +119,13 @@ body {
     transition: .3s ease;
 }
 
-.left header nav ul li:first-child a,
-.left header nav ul li a:hover {
+.left header nav ul li a.active,
+.left header nav ul li a.active:hover {
     transition: 0s;
     background: #f1f3ff;
 }
 
-.left header nav ul li a::before {
+.left header nav ul li a.active::before {
     content: '';
     position: absolute;
     right: 0;
@@ -135,8 +135,8 @@ body {
     transition: .3s ease;
 }
 
-.left header nav ul li:first-child a::before,
-.left header nav ul li a:hover::before {
+.left header nav ul li a.active::before,
+.left header nav ul li a.active:hover::before {
     width: 4px;
 }
 
@@ -151,8 +151,8 @@ body {
     font-size: 1.1em;
 }
 
-.left header nav ul li:first-child a .material-symbols-outlined,
-.left header nav ul li:first-child a .title,
+.left header nav ul li a.active .material-symbols-outlined,
+.left header nav ul li a.active .title,
 .left header nav ul li a:hover .material-symbols-outlined,
 .left header nav ul li a:hover .title {
     color: rgb(0,35,135);
@@ -168,48 +168,37 @@ body {
     gap: 10px;
 }
 
-/* Top bar */
-.top {
+/* Top section of the main content */
+.right .top {
+    position: relative;
     width: 100%;
-    height: 70px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 40px;
-    background-color: white;
-    border-radius: 20px;
-    box-shadow: rgba(255, 255, 255, 0.5) 35px 35px 68px 0px,
-                inset rgba(255, 255, 255, 0.6) -8px -8px 16px 0px,
-                inset rgb(255, 255, 255) 0px 11px 28px 0px;
+    justify-content: space-between;
 }
 
-/* Search box */
-.top .searchBx h2 {
-    font-size: 2.2em;
+.right .top .searchBx h2 {
+    font-size: 1.5em;
+    font-weight: 600;
     color: #000;
 }
 
-
-/* User dropdown */
-.user {
+.right .top .user {
     position: relative;
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 10px;
-    cursor: pointer;
 }
 
-.user h2 {
-    font-size: 2.5em;
+.right .top .user h2 {
+    font-size: 1.1em;
+    font-weight: 500;
     color: #000;
 }
 
-.user h2 span {
-    font-size: 0.8em;
-    color: #999;
-}
-
-.user .material-symbols-outlined {
+.right .top .user span {
+    cursor: pointer;
     font-size: 2em;
     color: rgb(0, 35, 135);
 }
@@ -287,38 +276,61 @@ body {
     gap: 20px;
 }
 
-/* Cards section */
+/* Cards container */
 .cards {
+    width: 100%;
     display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
+/* Card */
 .cards .card {
-    flex: 1;
-    min-width: 200px;
-    background-color: white;
+    width: 30%;
+    height: 120px;
+    background: rgb(0, 35, 135);
     border-radius: 20px;
-    box-shadow: rgba(255, 255, 255, 0.5) 35px 35px 68px 0px,
-                inset rgba(255, 255, 255, 0.6) -8px -8px 16px 0px,
-                inset rgb(255, 255, 255) 0px 11px 28px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 20px;
+    cursor: pointer;
+    transition: 0.5s ease-in-out;
+}
+
+.cards .card:hover {
+    background: rgb(0, 24, 91);
 }
 
 .cards .card .cardInner {
+    width: 100%;
     display: flex;
+    justify-content: space-between;
     flex-direction: column;
     gap: 10px;
 }
 
-.cards .card .cardTitle h2 {
-    font-size: 1.2em;
-    color: #000;
+.cards .card .cardInner .cardTitle {
+    color: #fff;
 }
 
-.cards .card .cardMain h2 {
-    font-size: 2em;
-    color: rgb(0,35,135);
+.cards .card .cardInner .cardTitle h2 {
+    font-size: 1.2em;
+    font-weight: 400;
+}
+
+.cards .card .cardInner .cardMain {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.cards .card .cardInner .cardMain h2 {
+    color: #f1f3ff;
+    font-size: 2.0em;
+    font-weight: 500;
 }
 
 /* myTasks start */
@@ -410,7 +422,7 @@ body {
 .myTasks .tasks ul li .tasksIconName .tasksName {
     color: #000;
     cursor: pointer;
-    font-size: 1.5em;
+    font-size: 1.2em;
     font-weight: 500;
     padding-left: 10px;
     position: relative;
@@ -446,5 +458,158 @@ body {
 .myTasks .tasks ul li .tasksStar.half {
     color: #f5c75f;
 }
-
 /* myTasks end */
+
+/* Project card */
+.projectCard {
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    background: #fff;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+    transition: 0.3s ease-in-out;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.projectCard .projectTop {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.projectCard .projectTop .projectDots {
+    cursor: pointer;
+}
+
+.projectCard .projectTop .projectDots:hover {
+    color: rgb(0, 24, 91);
+}
+
+.projectCard .projectTop h2 {
+    font-size: 1.5em;
+    font-weight: 500;
+    color: #000;
+}
+
+.projectCard .projectTop span {
+    font-size: 0.9em;
+    color: rgb(153, 153, 153);
+}
+
+.projectCard .projectProgress {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.projectCard .projectProgress .process {
+    position: relative;
+    padding: 5px 10px;
+    background: #f1f3ff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.projectCard .projectProgress .process h2  {
+    color: rgb(0, 35, 135);
+    white-space: nowrap;
+    font-size: 1.1em;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.projectCard .projectProgress .priority {
+    position: relative;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.projectCard .projectProgress .priority::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    transform: translate(-50%, -50%);
+    background: #ff0000;
+    border-radius: 50%;
+    box-shadow: 0 0 2px #ff0000,
+        0 0 5px #ff000077;
+}
+
+.projectCard .projectProgress .priority h2 {
+    color: #ff0000;
+    white-space: nowrap;
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+.projectCard .projectDiscription {
+    width: 100%;
+}
+
+.projectCard .projectDiscription h2 {
+    font-size: 1.2em;
+    font-weight: 500;
+    color: #000;
+}
+
+.projectCard .projectDiscription p {
+    font-size: 1em;
+    font-weight: 400;
+    color: rgb(102, 102, 102);
+}
+
+.projectCard .date h2 {
+    font-size: 1.2em;
+    font-weight: 500;
+    color: #000;
+}
+
+.projectCard .date span {
+    font-size: 0.9em;
+    color: rgb(153, 153, 153);
+}
+
+/* Responsive design */
+@media only screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .left {
+        width: 100%;
+        height: auto;
+        position: static;
+    }
+
+    .right {
+        left: 0;
+        position: static;
+    }
+
+    .right .top {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .right .main {
+        padding: 0 20px;
+    }
+
+    .cards {
+        flex-direction: column;
+    }
+
+    .cards .card {
+        width: 100%;
+    }
+}
