@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Remove</title>
+    <title>Task Update</title>
     <link rel="stylesheet" href="CSS/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
@@ -18,39 +18,44 @@
                     <h2>TaskTinker</h2>
                 </div>
                 <nav>
-                    <ul>
+                <ul>
                         <li>
-                            <a href="#" id="dashboardLink">
+                            <a href="Dashboard.php" class="active">
                                 <span class="material-symbols-outlined">dashboard</span>
                                 <span class="title">Dashboard</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" id="tasksLink">
+                            <a href="DisplayTask.php">
                                 <span class="material-symbols-outlined">task_alt</span>
                                 <span class="title">Tasks</span>
                             </a>
-                        </li>
                         <li>
-                            <a href="#" id="addTaskLink">
+                            <a href="AddTask.php">
                                 <span class="material-symbols-outlined">add_task</span>
                                 <span class="title">Add Task</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" id="updateTaskLink">
+                            <a href="CompleteTask.php">
+                                <span class="material-symbols-outlined">task_alt</span>
+                                <span class="title">Complete Task</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="UpdateTask.php">
                                 <span class="material-symbols-outlined">update</span>
                                 <span class="title">Update Task</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" id="removeTaskLink" class="active">
+                            <a href="RemoveTask.php">
                                 <span class="material-symbols-outlined">delete_history</span>
                                 <span class="title">Remove Task</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" id="profileLink">
+                            <a href="#">
                                 <span class="material-symbols-outlined">account_circle</span>
                                 <span class="title">Profile</span>
                             </a>
@@ -67,7 +72,7 @@
         <main class="right">
             <div class="top">
                 <div class="searchBx">
-                    <h2>Remove Task</h2>
+                    <h2>Add Task</h2>
                 </div>
                 <div class="user">
                     <h2>Chamindu<br><span>Undergraduate</span></h2>
@@ -110,7 +115,7 @@
                 </form>
             </div>
 
-            <!-- Remove Task Form -->
+            <!-- Update Task Form -->
             <div class="TaskForm">
                 <form action="">
                     <table>
@@ -119,26 +124,26 @@
                         </tr>
                         <tr>
                             <td><label for="taskName">Task Name</label><br>
-                                <input type="text" id="taskName" name="taskName" disabled></td>
+                                <input type="text" id="taskName" name="taskName" required></td>
                         </tr>
                         <tr>
                             <td><label for="taskDescription">Task Description</label><br>
-                                <textarea name="taskDescription" id="taskDescription" disabled></textarea></td>
+                                <textarea name="taskDescription" id="taskDescription" required></textarea></td>
                         </tr>
                         <tr>
                             <td><label for="taskDate">Task Date</label><br>
-                                <input type="date" id="taskDate" name="taskDate" disabled></td>
+                                <input type="date" id="taskDate" name="taskDate" required></td>
                         </tr>
                         <tr>
                             <td><label for="taskPriority">Task Priority</label><br>
-                                <select name="taskPriority" id="taskPriority" disabled>
+                                <select name="taskPriority" id="taskPriority" required>
                                     <option value="High">High</option>
                                     <option value="Medium">Medium</option>
                                     <option value="Low">Low</option>
                                 </select></td>
                         </tr>
                         <tr>
-                            <td><button type="submit">Remove</button></td>
+                            <td><button type="submit">Update</button></td>
                         </tr>
                     </table>
                 </form>

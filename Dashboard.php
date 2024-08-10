@@ -20,30 +20,36 @@
                 <nav>
                     <ul>
                         <li>
-                            <a href="#" class="active">
+                            <a href="Dashboard.php" class="active">
                                 <span class="material-symbols-outlined">dashboard</span>
                                 <span class="title">Dashboard</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="DisplayTask.php">
                                 <span class="material-symbols-outlined">task_alt</span>
                                 <span class="title">Tasks</span>
                             </a>
                         <li>
-                            <a href="#">
+                            <a href="AddTask.php">
                                 <span class="material-symbols-outlined">add_task</span>
                                 <span class="title">Add Task</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="CompleteTask.php">
+                                <span class="material-symbols-outlined">task_alt</span>
+                                <span class="title">Complete Task</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="UpdateTask.php">
                                 <span class="material-symbols-outlined">update</span>
                                 <span class="title">Update Task</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="RemoveTask.php">
                                 <span class="material-symbols-outlined">delete_history</span>
                                 <span class="title">Remove Task</span>
                             </a>

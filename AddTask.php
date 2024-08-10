@@ -1,3 +1,20 @@
+<?php
+//check cookie
+if(isset($_COOKIE['UserEmail'])){
+    $UserEmail = $_COOKIE['UserEmail'];
+} else {
+    //redirect to login page
+    echo '<script>
+            var confirmMsg = confirm("Your session has timed out. Please log in again.");
+            if (confirmMsg) {
+                window.location.href = "LoginAndRegister.php";
+            }
+        </script>';
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,39 +35,44 @@
                     <h2>TaskTinker</h2>
                 </div>
                 <nav>
-                    <ul>
+                <ul>
                         <li>
-                            <a href="#" id="dashboardLink">
+                            <a href="Dashboard.php" class="active">
                                 <span class="material-symbols-outlined">dashboard</span>
                                 <span class="title">Dashboard</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" id="tasksLink">
+                            <a href="DisplayTask.php">
                                 <span class="material-symbols-outlined">task_alt</span>
                                 <span class="title">Tasks</span>
                             </a>
-                        </li>
                         <li>
-                            <a href="#" id="addTaskLink"  class="active">
+                            <a href="AddTask.php">
                                 <span class="material-symbols-outlined">add_task</span>
                                 <span class="title">Add Task</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" id="updateTaskLink">
+                            <a href="CompleteTask.php">
+                                <span class="material-symbols-outlined">task_alt</span>
+                                <span class="title">Complete Task</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="UpdateTask.php">
                                 <span class="material-symbols-outlined">update</span>
                                 <span class="title">Update Task</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" id="removeTaskLink">
+                            <a href="RemoveTask.php">
                                 <span class="material-symbols-outlined">delete_history</span>
                                 <span class="title">Remove Task</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" id="profileLink">
+                            <a href="#">
                                 <span class="material-symbols-outlined">account_circle</span>
                                 <span class="title">Profile</span>
                             </a>
@@ -93,7 +115,7 @@
 
             <!-- Add Task Form -->
             <div class="TaskForm">
-                <form action="">
+                <form id="addtaskForm" method="post" action="#">
                     <table>
                         <tr>
                             <td><label for="taskName">Task Name</label><br>
@@ -116,7 +138,7 @@
                                 </select></td>
                         </tr>
                         <tr>
-                            <td><button type="submit">Save</button></td>
+                            <td><button type="submit" name="addTask">Save</button></td>
                         </tr>
                     </table>
                 </form>

@@ -18,39 +18,44 @@
                     <h2>TaskTinker</h2>
                 </div>
                 <nav>
-                    <ul>
+                <ul>
                         <li>
-                            <a href="#" id="dashboardLink">
+                            <a href="Dashboard.php" class="active">
                                 <span class="material-symbols-outlined">dashboard</span>
                                 <span class="title">Dashboard</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" id="tasksLink" class="active">
+                            <a href="DisplayTask.php">
                                 <span class="material-symbols-outlined">task_alt</span>
                                 <span class="title">Tasks</span>
                             </a>
-                        </li>
                         <li>
-                            <a href="#" id="addTaskLink">
+                            <a href="AddTask.php">
                                 <span class="material-symbols-outlined">add_task</span>
                                 <span class="title">Add Task</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" id="updateTaskLink">
+                            <a href="CompleteTask.php">
+                                <span class="material-symbols-outlined">task_alt</span>
+                                <span class="title">Complete Task</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="UpdateTask.php">
                                 <span class="material-symbols-outlined">update</span>
                                 <span class="title">Update Task</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" id="removeTaskLink">
+                            <a href="RemoveTask.php">
                                 <span class="material-symbols-outlined">delete_history</span>
                                 <span class="title">Remove Task</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" id="profileLink">
+                            <a href="#">
                                 <span class="material-symbols-outlined">account_circle</span>
                                 <span class="title">Profile</span>
                             </a>

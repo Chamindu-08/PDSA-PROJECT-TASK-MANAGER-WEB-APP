@@ -5,7 +5,7 @@ $signupError = $loginError = "";
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     //get database connection
-    include 'DBConnection/DBConnection.php';
+    include 'DataBaseConnection\DataBaseConnection.php';
 
     //check connection
     if (!$connection) {
@@ -18,52 +18,51 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $email = $_POST["email"];
 		$position = $_POST["position"];
         $contactNo = $_POST["contactNo"];
-        $confirmId = $_POST["confirmId"];
         $password = $_POST["password"];
         $confirmPassword = $_POST["confirmPassword"];
 
-			// Check if passwords match
-			if ($password !== $confirmPassword) {
-				echo "<script>alert('Passwords do not match!');</script>";
+		// Check if passwords match
+		if ($password !== $confirmPassword) {
+			echo "<script>alert('Passwords do not match!');</script>";
+		} else {
+			// Check if email exists in database
+			$check = "SELECT * FROM user WHERE UserEmail='$email'";
+			$result = mysqli_query($connection, $check);
+
+			if (mysqli_num_rows($result) > 0) {
+				echo "<script>alert('Email already exists!');</script>";
 			} else {
-				// Check if email exists in database
-				$check = "SELECT * FROM user WHERE UserEmail='$email'";
-				$result = mysqli_query($connection, $check);
-	
-				if (mysqli_num_rows($result) > 0) {
-					echo "<script>alert('Email already exists!');</script>";
-				} else {
-					
-					//validate contact number
-					if (!preg_match("/^[0-9]{10}+$/", $contactNo)) {
-						echo "<script>alert('Invalid Contact Number!');</script>";
-					}
-
-					//validate password and confirm password 8 characters long
-					if (strlen($password) < 8 || strlen($confirmPassword) < 8) {
-						echo "<script>alert('Password must be at least 8 characters long.');</script>";
-					}
-
-					//validate email
-					if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-						echo "<script>alert('Invalid email!');</script>";
-					}
-
-					// Insert new user into database
-					$insert = "INSERT INTO user(UserEmail, UserName, UserPosition, UserPassword) VALUES ('$email','$name','$position','$password')";
-
-                    // Execute the query
-                    $result = mysqli_query($connection, $insert);
-
-                    if ($result) {
-                        echo "<script>alert('User registered successfully!');</script>";
-                        // Redirect to login page
-                        header("Location: LoginAndRegister.php");
-                    } else {
-                        echo "<script>alert('Error registering user!');</script>";
-                    }
+				
+				//validate contact number
+				if (!preg_match("/^[0-9]{10}+$/", $contactNo)) {
+					echo "<script>alert('Invalid Contact Number!');</script>";
 				}
+
+				//validate password and confirm password 8 characters long
+				if (strlen($password) < 8 || strlen($confirmPassword) < 8) {
+					echo "<script>alert('Password must be at least 8 characters long.');</script>";
+				}
+
+				//validate email
+				if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+					echo "<script>alert('Invalid email!');</script>";
+				}
+
+				// Insert new user into database
+				$insert = "INSERT INTO user(UserEmail, UserName, UserPosition, UserPassword) VALUES ('$email','$name','$position','$password')";
+
+                // Execute the query
+                $result = mysqli_query($connection, $insert);
+
+                if ($result) {
+                    echo "<script>alert('User registered successfully!');</script>";
+                    // Redirect to login page
+                    header("Location: LoginAndRegister.php");
+                } else {
+                    echo "<script>alert('Error registering user!');</script>";
+                }
 			}
+		}
 	}
 
 
@@ -93,7 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html>
