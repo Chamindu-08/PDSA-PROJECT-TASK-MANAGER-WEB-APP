@@ -68,21 +68,33 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     if (isset($_POST['login'])) {
         // Login functionality
-        $username = $_POST["loginEmail"];
+        $useremail = $_POST["loginEmail"];
         $password = $_POST["loginPassword"];
 
 		$loginError = "";
+		$username = $position = "";
 
-        $sql = "SELECT * FROM user WHERE UserEmail='$username' AND UserPassword='$password'";
+        $sql = "SELECT * FROM user WHERE UserEmail='$useremail' AND UserPassword='$password'";
         $result = mysqli_query($connection, $sql);
 
         if (mysqli_num_rows($result) > 0) {
+			$row = mysqli_fetch_assoc($result);
+
+			// set values to variables
+			$useremail = $row['UserEmail'];
+			$username = $row['UserName'];
+			$position = $row['UserPosition'];
+
             // Set session variables
             $_SESSION['loggedin'] = true;
-            $_SESSION['userNames'] = $username;
+            $_SESSION['userEmail'] = $useremail;
+			$_SESSION['userName'] = $username;
+			$_SESSION['userPosition'] = $position;
 
             //cookie set for 30 minutes
-            setcookie('UserEmail', $username, time() + (30 * 60), '/');
+            setcookie('UserEmail', $useremail, time() + (30 * 60), '/');
+			setcookie('UserName', $username, time() + (30 * 60), '/');
+			setcookie('UserPosition', $position, time() + (30 * 60), '/');
 
             header("Location: Dashboard.php");
             exit();

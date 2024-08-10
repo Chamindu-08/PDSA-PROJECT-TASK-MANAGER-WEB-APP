@@ -1,3 +1,21 @@
+<?php
+// Check cookie
+if (isset($_COOKIE['UserEmail'])) {
+    $UserEmail = $_COOKIE['UserEmail'];
+    $UserName = $_COOKIE['UserName'];
+    $UserPosition = $_COOKIE['UserPosition'];
+} else {
+    // Redirect to login page
+    echo '<script>
+            var confirmMsg = confirm("Your session has timed out. Please log in again.");
+            if (confirmMsg) {
+                window.location.href = "LoginAndRegister.php";
+            }
+          </script>';
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +24,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task</title>
-    <link rel="stylesheet" href="JavaScript/script.js">
+    <link rel="stylesheet" href="CSS/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
@@ -20,13 +38,13 @@
                 <nav>
                 <ul>
                         <li>
-                            <a href="Dashboard.php" class="active">
+                            <a href="Dashboard.php">
                                 <span class="material-symbols-outlined">dashboard</span>
                                 <span class="title">Dashboard</span>
                             </a>
                         </li>
                         <li>
-                            <a href="DisplayTask.php">
+                            <a href="DisplayTask.php" class="active">
                                 <span class="material-symbols-outlined">task_alt</span>
                                 <span class="title">Tasks</span>
                             </a>
@@ -75,7 +93,7 @@
                     <h2>Dashboard</h2>
                 </div>
                 <div class="user">
-                    <h2>Chamindu<br><span>Undergraduate</span></h2>
+                    <h2><?php echo $UserName; ?><br><span><?php echo $UserPosition; ?></span></h2>
                     <span class="material-symbols-outlined" id="accountIcon">account_circle</span>
                     <div class="dropdown">
                         <ul>
@@ -87,7 +105,7 @@
                                 <span class="material-symbols-outlined">settings</span> 
                                 Settings</a>
                             </li>
-                            <li><a href="#" class="dropdown-item">
+                            <li><a href="LogOut.php" class="dropdown-item">
                                 <span class="material-symbols-outlined">logout</span> 
                                 Log Out</a>
                             </li>

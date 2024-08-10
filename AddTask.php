@@ -2,6 +2,8 @@
 //check cookie
 if(isset($_COOKIE['UserEmail'])){
     $UserEmail = $_COOKIE['UserEmail'];
+    $UserName = $_COOKIE['UserName'];
+    $UserPosition = $_COOKIE['UserPosition'];
 } else {
     //redirect to login page
     echo '<script>
@@ -13,6 +15,60 @@ if(isset($_COOKIE['UserEmail'])){
     exit();
 }
 
+//check if form is submitted
+if(isset($_POST['addTask'])){
+    //connect to database
+    include 'DataBaseConnection\DataBaseConnection.php';
+
+    //get form data
+    $taskName = $_POST['taskName'];
+    $taskDescription = $_POST['taskDescription'];
+    $taskDate = $_POST['taskDate'];
+    $taskPriority = $_POST['taskPriority'];
+
+    //validate date currecnt date or future date
+    $currentDate = date("Y-m-d");
+    if($taskDate < $currentDate){
+        echo '<script>
+                alert("Please select a future date.");
+                window.location.href = "AddTask.php";
+            </script>';
+        exit();
+    }
+
+    //get taskId from database
+    $sql = "SELECT MAX(taskId) AS taskId FROM task";
+
+    $result = mysqli_query($connection, $sql);
+    
+    if (mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+            $taskId = $row['taskId'] + 1;
+        }
+    } else {
+        $taskId = 1;
+    }
+
+    //insert data into database
+    $sql = "INSERT INTO task (TaskId, TaskName, TaskDescription, TaskPriority, DueDate, TaskStatus, UserEmail) VALUES ('$taskId', '$taskName', '$taskDescription', '$taskPriority', '$taskDate', 'PENDING', '$UserEmail')";
+
+    $result = mysqli_query($connection, $sql);
+
+    if($result){
+        echo '<script>
+                alert("Task added successfully.");
+                window.location.href = "Dashboard.php";
+            </script>';
+    } else {
+        echo '<script>
+                alert("Failed to add task.");
+                window.location.href = "AddTask.php";
+            </script>';
+    }
+
+    //close connection
+    mysqli_close($connection);
+}
 ?>
 
 <!DOCTYPE html>
@@ -35,9 +91,9 @@ if(isset($_COOKIE['UserEmail'])){
                     <h2>TaskTinker</h2>
                 </div>
                 <nav>
-                <ul>
+                    <ul>
                         <li>
-                            <a href="Dashboard.php" class="active">
+                            <a href="Dashboard.php">
                                 <span class="material-symbols-outlined">dashboard</span>
                                 <span class="title">Dashboard</span>
                             </a>
@@ -48,7 +104,7 @@ if(isset($_COOKIE['UserEmail'])){
                                 <span class="title">Tasks</span>
                             </a>
                         <li>
-                            <a href="AddTask.php">
+                            <a href="AddTask.php" class="active">
                                 <span class="material-symbols-outlined">add_task</span>
                                 <span class="title">Add Task</span>
                             </a>
@@ -86,13 +142,14 @@ if(isset($_COOKIE['UserEmail'])){
                 </div>
             </header>
         </aside>
+
         <main class="right">
             <div class="top">
                 <div class="searchBx">
                     <h2>Add Task</h2>
                 </div>
                 <div class="user">
-                    <h2>Chamindu<br><span>Undergraduate</span></h2>
+                    <h2><?php echo $UserName; ?><br><span><?php echo $UserPosition; ?></span></h2>
                     <span class="material-symbols-outlined" id="accountIcon">account_circle</span>
                     <div class="dropdown">
                         <ul>
@@ -104,7 +161,7 @@ if(isset($_COOKIE['UserEmail'])){
                                 <span class="material-symbols-outlined">settings</span> 
                                 Settings</a>
                             </li>
-                            <li><a href="#" class="dropdown-item">
+                            <li><a href="LogOut.php" class="dropdown-item">
                                 <span class="material-symbols-outlined">logout</span> 
                                 Log Out</a>
                             </li>
@@ -143,7 +200,6 @@ if(isset($_COOKIE['UserEmail'])){
                     </table>
                 </form>
             </div>
-            
         </main>
     </div>
     <script src="JavaScript/script.js"></script>

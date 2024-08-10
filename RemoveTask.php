@@ -2,6 +2,8 @@
 // Check cookie
 if (isset($_COOKIE['UserEmail'])) {
     $UserEmail = $_COOKIE['UserEmail'];
+    $UserName = $_COOKIE['UserName'];
+    $UserPosition = $_COOKIE['UserPosition'];
 } else {
     // Redirect to login page
     echo '<script>
@@ -148,7 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['taskId'])) {
                     <h2>Remove Task</h2>
                 </div>
                 <div class="user">
-                    <h2>Chamindu<br><span>Undergraduate</span></h2>
+                    <h2><?php echo $UserName; ?><br><span><?php echo $UserPosition; ?></span></h2>
                     <span class="material-symbols-outlined" id="accountIcon">account_circle</span>
                     <div class="dropdown">
                         <ul>
@@ -160,7 +162,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['taskId'])) {
                                 <span class="material-symbols-outlined">settings</span> 
                                 Settings</a>
                             </li>
-                            <li><a href="#" class="dropdown-item">
+                            <li><a href="LogOut.php" class="dropdown-item">
                                 <span class="material-symbols-outlined">logout</span> 
                                 Log Out</a>
                             </li>
