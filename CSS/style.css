@@ -580,7 +580,7 @@ body {
 }
 
 /* Add task form */
-.addTaskForm {
+.TaskForm {
     width: 100%;
     background: #fff;
     border-radius: 20px;
@@ -591,11 +591,11 @@ body {
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
-.addTaskForm table {
+.TaskForm table {
     width: 100%;
 }
 
-.addTaskForm table tr {
+.TaskForm table tr {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -603,11 +603,11 @@ body {
     gap: 40px;
 }
 
-.addTaskForm table tr td {
+.TaskForm table tr td {
     width: 100%;
 }
 
-.addTaskForm table tr td input {
+.TaskForm table tr td input {
     width: 100%;
     height: 40px;
     padding: 0 10px;
@@ -616,7 +616,7 @@ body {
     font-size: 1.1em;
 }
 
-.addTaskForm table tr td textarea {
+.TaskForm table tr td textarea {
     width: 100%;
     height: 100px;
     padding: 10px;
@@ -625,7 +625,7 @@ body {
     font-size: 1.1em;
 }
 
-.addTaskForm table tr td select {
+.TaskForm table tr td select {
     width: 100%;
     height: 40px;
     padding: 0 10px;
@@ -634,7 +634,7 @@ body {
     font-size: 1.1em;
 }
 
-.addTaskForm table tr td button {
+.TaskForm table tr td button {
     width: 15%;
     height: 40px;
     background: rgb(0, 35, 135);
