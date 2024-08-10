@@ -14,20 +14,81 @@ if (isset($_COOKIE['UserEmail'])) {
           </script>';
     exit();
 }
+
+// Initialize variables
+$TaskName = $TaskDescription = $DueDate = $TaskPriority = '';
+$TaskId = '';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['taskPriority'])) {
+    // Database connection
+    include 'DataBaseConnection/DataBaseConnection.php';
+
+    if (!$connection) {
+        echo "Connection failed";
+    }
+
+    $TaskId = $_POST['taskPriority'];
+
+    // Query to retrieve task details
+    $sql = "SELECT TaskName, TaskDescription, DueDate, TaskPriority FROM task WHERE TaskId = '$TaskId'";
+    $result = mysqli_query($connection, $sql);
+
+    if ($result) {
+        if ($row = mysqli_fetch_assoc($result)) {
+            $TaskName = $row['TaskName'];
+            $TaskDescription = $row['TaskDescription'];
+            $DueDate = $row['DueDate'];
+            $TaskPriority = $row['TaskPriority'];
+        }
+    } else {
+        echo "Error: " . mysqli_error($connection);
+    }
+
+    // Close the database connection
+    mysqli_close($connection);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['taskId'])) {
+    // Database connection
+    include 'DataBaseConnection/DataBaseConnection.php';
+
+    if (!$connection) {
+        echo "Connection failed";
+    }
+
+    //update all feilds
+    $TaskId = $_POST['taskId'];
+    $TaskName = $_POST['taskName'];
+    $TaskDescription = $_POST['taskDescription'];
+    $DueDate = $_POST['taskDate'];
+    $TaskPriority = $_POST['taskPriority'];
+
+    // Query to update task
+    $sql = "UPDATE task SET TaskName='$TaskName', TaskDescription='$TaskDescription', DueDate='$DueDate', TaskPriority='$TaskPriority' WHERE TaskId='$TaskId'";
+
+    $result = mysqli_query($connection, $sql);
+
+    if ($result) {
+        echo "<script>alert('Task updated successfully!');</script>";
+    } else {
+        echo "Error: " . mysqli_error($connection);
+    }
+
+    // Close the database connection
+    mysqli_close($connection);
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Update</title>
+    <title>Task Complete</title>
     <link rel="stylesheet" href="CSS/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
-
 <body>
     <div class="container">
         <aside class="left">
@@ -90,7 +151,7 @@ if (isset($_COOKIE['UserEmail'])) {
         <main class="right">
             <div class="top">
                 <div class="searchBx">
-                    <h2>Add Task</h2>
+                    <h2>Update Task</h2>
                 </div>
                 <div class="user">
                     <h2><?php echo $UserName; ?><br><span><?php echo $UserPosition; ?></span></h2>
@@ -116,15 +177,41 @@ if (isset($_COOKIE['UserEmail'])) {
 
             <!-- Search Form -->
             <div class="TaskForm">
-                <form action="">
+                <form id="formTaskRemove" method="post" action="#">
                     <table>
                         <tr>
                             <td><label for="taskName">Task Name</label><br>
-                                <select name="taskPriority" id="taskPriority" required>
-                                    <option value="Task 01">Task 01</option>
-                                    <option value="Task 02">Task 02</option>
-                                    <option value="Task 03">Task 03</option>
-                                </select></td>
+                                <?php
+                                    // Database connection
+                                    include 'DataBaseConnection/DataBaseConnection.php';
+
+                                    if (!$connection) {
+                                        echo "Connection failed";
+                                    }
+
+                                    // Query to retrieve tasks
+                                    $sql = "SELECT TaskId, TaskName FROM task WHERE DueDate = CURRENT_DATE AND TaskStatus = 'PENDING' AND UserEmail = '$UserEmail'";
+                                    $result = mysqli_query($connection, $sql);
+
+                                    if ($result) {
+                                        echo '<select name="taskPriority" id="taskPriority" required>';
+                                                            
+                                        // Display task options
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            echo '<option value="' . $row['TaskId'] . '">' . $row['TaskName'] . '</option>';
+                                        }
+                                                            
+                                        echo '</select>';
+                                                            
+                                        mysqli_free_result($result);
+                                    } else {
+                                        echo "Error: " . mysqli_error($connection);
+                                    }
+
+                                    // Close the database connection
+                                    mysqli_close($connection);
+                                ?>
+                            </td>
                         </tr>
                         <tr>
                             <td><button type="submit">Search</button></td>
@@ -133,35 +220,34 @@ if (isset($_COOKIE['UserEmail'])) {
                 </form>
             </div>
 
-            <!-- Update Task Form -->
+            <!-- Remove Task Form -->
             <div class="TaskForm">
-                <form action="">
+                <form id="formTaskRemove" method="post" action="#">
                     <table>
                         <tr>
-                            <h2>Task 01</h2>
+                            <h2><?php echo $TaskName; ?></h2>
                         </tr>
                         <tr>
                             <td><label for="taskName">Task Name</label><br>
-                                <input type="text" id="taskName" name="taskName" required></td>
+                                <input type="text" id="taskName" name="taskName" value="<?php echo $TaskName; ?>" require></td>
                         </tr>
                         <tr>
                             <td><label for="taskDescription">Task Description</label><br>
-                                <textarea name="taskDescription" id="taskDescription" required></textarea></td>
+                                <textarea name="taskDescription" id="taskDescription" require><?php echo $TaskDescription; ?></textarea></td>
                         </tr>
                         <tr>
                             <td><label for="taskDate">Task Date</label><br>
-                                <input type="date" id="taskDate" name="taskDate" required></td>
+                                <input type="date" id="taskDate" name="taskDate" value="<?php echo $DueDate; ?>" require></td>
                         </tr>
                         <tr>
                             <td><label for="taskPriority">Task Priority</label><br>
-                                <select name="taskPriority" id="taskPriority" required>
-                                    <option value="High">High</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="Low">Low</option>
-                                </select></td>
+                                <input type="text" id="taskPriority" name="taskPriority" value="<?php echo $TaskPriority; ?>" require></td>
                         </tr>
                         <tr>
-                            <td><button type="submit">Update</button></td>
+                            <td><input type="hidden" name="taskId" value="<?php echo $TaskId; ?>"></td>
+                        </tr>
+                        <tr>
+                            <td><button type="submit" onclick="return confirm('Are you sure you want to update this task?');">Update</button></td>
                         </tr>
                     </table>
                 </form>

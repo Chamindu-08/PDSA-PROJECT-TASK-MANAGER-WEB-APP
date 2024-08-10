@@ -1,19 +1,61 @@
 <?php
-// Check cookie
-if (isset($_COOKIE['UserEmail'])) {
+//check cookie
+if(isset($_COOKIE['UserEmail'])){
     $UserEmail = $_COOKIE['UserEmail'];
     $UserName = $_COOKIE['UserName'];
     $UserPosition = $_COOKIE['UserPosition'];
 } else {
-    // Redirect to login page
+    //redirect to login page
     echo '<script>
             var confirmMsg = confirm("Your session has timed out. Please log in again.");
             if (confirmMsg) {
                 window.location.href = "LoginAndRegister.php";
             }
-          </script>';
+        </script>';
     exit();
 }
+
+//calculate task count
+include 'DataBaseConnection\DataBaseConnection.php';
+
+//get task count
+$sql = "SELECT COUNT(TaskStatus) AS TaskCompleted FROM task WHERE TaskStatus = 'COMPLETED' AND UserEmail = '$UserEmail'";
+$result = mysqli_query($connection, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+    while($row = mysqli_fetch_assoc($result)) {
+        $taskCompleted = $row['TaskCompleted'];
+    }
+} else {
+    $taskCompleted = 0;
+}
+
+//get task count
+$sql = "SELECT COUNT(TaskStatus) AS TaskPending FROM task WHERE TaskStatus = 'PENDING' AND UserEmail = '$UserEmail'";
+$result = mysqli_query($connection, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+    while($row = mysqli_fetch_assoc($result)) {
+        $taskPending = $row['TaskPending'];
+    }
+} else {
+    $taskPending = 0;
+}
+
+//get task count
+$sql = "SELECT COUNT(TaskStatus) AS TaskOverdue FROM task WHERE TaskStatus = 'OVERDUE' AND UserEmail = '$UserEmail'";
+$result = mysqli_query($connection, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+    while($row = mysqli_fetch_assoc($result)) {
+        $taskOverdue = $row['TaskOverdue'];
+    }
+} else {
+    $taskOverdue = 0;
+}
+
+//close connection
+mysqli_close($connection);
 ?>
 
 <!DOCTYPE html>
@@ -122,7 +164,7 @@ if (isset($_COOKIE['UserEmail'])) {
                                 <h2>Task Completed</h2>
                             </div>
                             <div class="cardMain">
-                                <h2>20</h2>
+                                <h2><?php echo $taskCompleted; ?></h2>
                             </div>
                         </div>
                     </div>
@@ -132,7 +174,7 @@ if (isset($_COOKIE['UserEmail'])) {
                                 <h2>Task Pending</h2>
                             </div>
                             <div class="cardMain">
-                                <h2>10</h2>
+                                <h2><?php echo $taskPending; ?></h2>
                             </div>
                         </div>
                     </div>
@@ -142,7 +184,7 @@ if (isset($_COOKIE['UserEmail'])) {
                                 <h2>Task Overdue</h2>
                             </div>
                             <div class="cardMain">
-                                <h2>5</h2>
+                                <h2><?php echo $taskOverdue; ?></h2>
                             </div>
                         </div>
                     </div>

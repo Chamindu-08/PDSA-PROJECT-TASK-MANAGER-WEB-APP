@@ -15,6 +15,128 @@ if(isset($_COOKIE['UserEmail'])){
     exit();
 }
 
+//calculate task count
+include 'DataBaseConnection\DataBaseConnection.php';
+
+//get task count
+$sql = "SELECT COUNT(TaskStatus) AS TaskCompleted FROM task WHERE TaskStatus = 'COMPLETED' AND UserEmail = '$UserEmail'";
+$result = mysqli_query($connection, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+    while($row = mysqli_fetch_assoc($result)) {
+        $taskCompleted = $row['TaskCompleted'];
+    }
+} else {
+    $taskCompleted = 0;
+}
+
+//get task count
+$sql = "SELECT COUNT(TaskStatus) AS TaskPending FROM task WHERE TaskStatus = 'PENDING' AND UserEmail = '$UserEmail'";
+$result = mysqli_query($connection, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+    while($row = mysqli_fetch_assoc($result)) {
+        $taskPending = $row['TaskPending'];
+    }
+} else {
+    $taskPending = 0;
+}
+
+//get task count
+$sql = "SELECT COUNT(TaskStatus) AS TaskOverdue FROM task WHERE TaskStatus = 'OVERDUE' AND UserEmail = '$UserEmail'";
+$result = mysqli_query($connection, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+    while($row = mysqli_fetch_assoc($result)) {
+        $taskOverdue = $row['TaskOverdue'];
+    }
+} else {
+    $taskOverdue = 0;
+}
+
+//close connection
+mysqli_close($connection);
+
+class Node {
+    public $TaskName;
+    public $TaskStatus;
+    public $TaskPriority;
+    public $Next;
+}
+
+class LinkedList {
+    public $Head;
+
+    public function __construct() {
+        $this->Head = null;
+    }
+
+    public function Add($taskName, $taskStatus, $taskPriority) {
+        $newNode = new Node();
+        $newNode->TaskName = $taskName;
+        $newNode->TaskStatus = $taskStatus;
+        $newNode->TaskPriority = $taskPriority;
+        $newNode->Next = null;
+
+        if($this->Head == null) {
+            $this->Head = $newNode;
+        } else {
+            $last = $this->Head;
+            while($last->Next != null) {
+                $last = $last->Next;
+            }
+            $last->Next = $newNode;
+        }
+    }
+
+    public function Display() {
+        $current = $this->Head;
+        while($current != null) {
+            //display task
+            //check task status
+            if($current->TaskStatus == 'COMPLETED') {
+                $taskIcon = '<span class="tasksIcon done">
+                                <span class="material-symbols-outlined">
+                                    check
+                                </span>
+                            </span>';
+            } else {
+                $taskIcon = '<span class="tasksIcon pending">
+                                <span class="material-symbols-outlined">
+                                    pending
+                                </span>
+                            </span>';
+            }
+
+            //check task priority
+            if($current->TaskPriority == 'High') {
+                $taskStar = '<span class="tasksStar full">
+                                <span class="material-symbols-outlined">
+                                    star
+                                </span>
+                            </span>';
+            } else {
+                $taskStar = '<span class="tasksStar">
+                                <span class="material-symbols-outlined">
+                                    star
+                                </span>
+                            </span>';
+            }
+
+            echo '<li>
+                    <span class="tasksIconName">
+                        '.$taskIcon.'
+                        <span class="tasksName">
+                            '.$current->TaskName.'
+                        </span>
+                    </span>
+                    '.$taskStar.'
+                </li>';
+
+            $current = $current->Next;
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -123,7 +245,7 @@ if(isset($_COOKIE['UserEmail'])){
                                 <h2>Task Completed</h2>
                             </div>
                             <div class="cardMain">
-                                <h2>20</h2>
+                                <h2><?php echo $taskCompleted; ?></h2>
                             </div>
                         </div>
                     </div>
@@ -133,7 +255,7 @@ if(isset($_COOKIE['UserEmail'])){
                                 <h2>Task Pending</h2>
                             </div>
                             <div class="cardMain">
-                                <h2>10</h2>
+                                <h2><?php echo $taskPending; ?></h2>
                             </div>
                         </div>
                     </div>
@@ -143,7 +265,7 @@ if(isset($_COOKIE['UserEmail'])){
                                 <h2>Task Overdue</h2>
                             </div>
                             <div class="cardMain">
-                                <h2>5</h2>
+                                <h2><?php echo $taskOverdue; ?></h2>
                             </div>
                         </div>
                     </div>
@@ -163,109 +285,39 @@ if(isset($_COOKIE['UserEmail'])){
                     <!-- tasks start -->
                     <div class="tasks">
                         <ul>
-                            <li>
-                                <span class="tasksIconName">
-                                    <span class="tasksIcon done">
-                                        <span class="material-symbols-outlined">
-                                            check
+                            <?php
+                            //get tasks from database
+                            include 'DataBaseConnection\DataBaseConnection.php';
+
+                            $sql = "SELECT TaskName, TaskStatus, TaskPriority FROM task WHERE UserEmail = '$UserEmail' AND DueDate = CURDATE()";
+                            $result = mysqli_query($connection, $sql);
+
+                            if (mysqli_num_rows($result) > 0) {
+                                $list = new LinkedList();
+                                while($row = mysqli_fetch_assoc($result)) {
+                                    $list->Add($row['TaskName'], $row['TaskStatus'], $row['TaskPriority']);
+                                }
+                                $list->Display();
+                            } else {
+                                echo '<li>
+                                        <span class="tasksIconName">
+                                            <span class="tasksIcon done">
+                                                <span class="material-symbols-outlined">
+                                                    check
+                                                </span>
+                                            </span>
+                                            <span class="tasksName">
+                                                No tasks due today.
+                                            </span>
                                         </span>
-                                    </span>
-                                    <span class="tasksName">
-                                        My Task 1
-                                    </span>
-                                </span>
-                                <span class="tasksStar full">
-                                    <span class="material-symbols-outlined">
-                                        star
-                                    </span>
-                                </span>
-                            </li>
-                            <li>
-                                <span class="tasksIconName">
-                                    <span class="tasksIcon notDone"></span>
-                                    <span class="tasksName">
-                                        My Task 2
-                                    </span>
-                                </span>
-                                <span class="tasksStar half">
-                                    <span class="material-symbols-outlined">
-                                        star
-                                    </span>
-                                </span>
-                            </li>
-                            <li>
-                                <span class="tasksIconName">
-                                    <span class="tasksIcon notDone"></span>
-                                    <span class="tasksName">
-                                        My Task 3
-                                    </span>
-                                </span>
-                                <span class="tasksStar half">
-                                    <span class="material-symbols-outlined">
-                                        star
-                                    </span>
-                                </span>
-                            </li>
-                            <li>
-                                <span class="tasksIconName">
-                                    <span class="tasksIcon done">
-                                        <span class="material-symbols-outlined">
-                                            check
+                                        <span class="tasksStar full">
+                                            <span class="material-symbols-outlined">
+                                                star
+                                            </span>
                                         </span>
-                                    </span>
-                                    <span class="tasksName tasksLine">
-                                        <underline>My Task 4</underline>
-                                    </span>
-                                </span>
-                                <span class="tasksStar half">
-                                    <span class="material-symbols-outlined">
-                                        star
-                                    </span>
-                                </span>
-                            </li>
-                            <li>
-                                <span class="tasksIconName">
-                                    <span class="tasksIcon done">
-                                        <span class="material-symbols-outlined">
-                                            check
-                                        </span>
-                                    </span>
-                                    <span class="tasksName tasksLine">
-                                        My Task 5
-                                    </span>
-                                </span>
-                                <span class="tasksStar full">
-                                    <span class="material-symbols-outlined">
-                                        star
-                                    </span>
-                                </span>
-                            </li>
-                            <li>
-                                <span class="tasksIconName">
-                                    <span class="tasksIcon notDone"></span>
-                                    <span class="tasksName">
-                                        My Task 6
-                                    </span>
-                                </span>
-                                <span class="tasksStar full">
-                                    <span class="material-symbols-outlined">
-                                        star
-                                    </span>
-                                </span>
-                            </li>
-                            <li>
-                                <span class="tasksIconName">
-                                    <span class="tasksIcon notDone"></span>
-                                    <span class="tasksName">
-                                        My Task 7
-                                    </span>
-                                </span>
-                                <span class="tasksStar half">
-                                    <span class="material-symbols-outlined">
-                                        star
-                                    </span>
-                                </span>
-                            </li>
+                                    </li>';
+                            }
+                            ?>
                         </ul>
                     </div>
                 <!-- tasks ens -->
