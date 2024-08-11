@@ -56,6 +56,169 @@ if (mysqli_num_rows($result) > 0) {
 
 //close connection
 mysqli_close($connection);
+
+//node class
+class Node {
+    public $TaskName;
+    public $TaskDescription;
+    public $TaskStatus;
+    public $TaskPriority;
+    public $DueDate;
+    public $Next;
+
+    public function __construct($TaskName, $TaskDescription, $TaskStatus, $TaskPriority, $DueDate) {
+        $this->TaskName = $TaskName;
+        $this->TaskDescription = $TaskDescription;
+        $this->TaskStatus = $TaskStatus;
+        $this->TaskPriority = $TaskPriority;
+        $this->DueDate = $DueDate;
+        $this->Next = null;
+    }
+}
+
+//linked list class
+class LinkedList {
+    public $head;
+
+    //insert node
+    public function addEnd($TaskName, $TaskDescription, $TaskStatus, $TaskPriority, $DueDate) {
+        //create a new node
+        $newNode = new Node($TaskName, $TaskDescription, $TaskStatus, $TaskPriority, $DueDate);
+
+        //check if the list is empty
+        if ($this->head == null) {
+            $this->head = $newNode;
+        } else {
+            //traverse to the end of the list
+            $current = $this->head;
+            while ($current->Next != null) {
+                $current = $current->Next;
+            }
+            $current->Next = $newNode;
+        }
+    }
+
+    //sort linked list
+    public function sort() {
+        $current = $this->head;
+        $index = null;
+
+        if ($this->head == null) {
+            return;
+        } else {
+            while ($current != null) {
+                $index = $current->Next;
+
+                while ($index != null) {
+                    if ($this->priorityToValue($current->TaskPriority) > $this->priorityToValue($index->TaskPriority)) {
+                        $tempTaskName = $current->TaskName;
+                        $current->TaskName = $index->TaskName;
+                        $index->TaskName = $tempTaskName;
+
+                        $tempTaskDescription = $current->TaskDescription;
+                        $current->TaskDescription = $index->TaskDescription;
+                        $index->TaskDescription = $tempTaskDescription;
+
+                        $tempTaskStatus = $current->TaskStatus;
+                        $current->TaskStatus = $index->TaskStatus;
+                        $index->TaskStatus = $tempTaskStatus;
+
+                        $tempTaskPriority = $current->TaskPriority;
+                        $current->TaskPriority = $index->TaskPriority;
+                        $index->TaskPriority = $tempTaskPriority;
+
+                        $tempDueDate = $current->DueDate;
+                        $current->DueDate = $index->DueDate;
+                        $index->DueDate = $tempDueDate;
+                    } 
+                    $index = $index->Next;
+                }
+                $current = $current->Next;
+            }
+        }
+    }
+
+    //convert priority level to numerical value for sorting
+    private function priorityToValue($priority) {
+        switch ($priority) {
+            case 'High':
+                return 1;
+            case 'Medium':
+                return 2;
+            case 'Low':
+                return 3;
+            default:
+                return 4;
+        }
+    }
+
+    //delete node
+    public function delete($TaskName) {
+        $current = $this->head;
+
+        if ($current->TaskName == $TaskName) {
+            $this->head = $current->Next;
+        } else {
+            while ($current->Next != null) {
+                if ($current->Next->TaskName == $TaskName) {
+                    $current->Next = $current->Next->Next;
+                    break;
+                }
+                $current = $current->Next;
+            }
+        }
+    }
+
+    //display task
+    public function display() {
+        $current = $this->head;
+        $count = 1;
+
+        if ($current == null) {
+            echo '<div class="projectCard">
+                    <div class="projectTop">
+                        <h2>No Task Found</h2>
+                    </div>
+                </div>';
+            exit();
+        } else {
+            while ($current != null) {
+                echo '<div class="projectCard">
+                        <div class="projectTop">
+                            <h2>Task '.$count.'<br><span>'.$current->TaskName.'</span></h2>
+                            <div class="projectDots">
+                                <span class="material-symbols-outlined">
+                                    more_horiz
+                                </span>
+                            </div>
+                        </div>
+    
+                        <div class="projectProgress">
+                            <div class="process">
+                                <h2>In Progress</h2>
+                            </div>
+                            <div class="priority">
+                                <h2>'.$current->TaskPriority.' Priority</h2>
+                            </div>
+                        </div>
+    
+                        <div class="projectDiscription">
+                            <h2>Task Description</h2>
+                            <p>'.$current->TaskDescription.'</p>
+                        </div>
+                
+                        <div class="date">
+                            <h2>Due Date <br><span>'.$current->DueDate.'</span></h2>
+                        </div>
+                    </div>';
+    
+                $current = $current->Next;
+                $count = $count + 1;
+            }
+        }
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -115,7 +278,7 @@ mysqli_close($connection);
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="ViewProfile.php">
                                 <span class="material-symbols-outlined">account_circle</span>
                                 <span class="title">Profile</span>
                             </a>
@@ -123,7 +286,7 @@ mysqli_close($connection);
                     </ul>
                 </nav>
                 <div class="logout">
-                    <button>
+                    <button onclick="window.location.href = 'LogOut.php';">
                         <span class="material-symbols-outlined">logout</span> Log Out
                     </button>
                 </div>
@@ -139,11 +302,11 @@ mysqli_close($connection);
                     <span class="material-symbols-outlined" id="accountIcon">account_circle</span>
                     <div class="dropdown">
                         <ul>
-                            <li><a href="#" class="dropdown-item">
+                            <li><a href="ViewProfile.php" class="dropdown-item">
                                 <span class="material-symbols-outlined">account_circle</span> 
                                 Profile</a>
                             </li>
-                            <li><a href="#" class="dropdown-item">
+                            <li><a href="ViewProfile.php" class="dropdown-item">
                                 <span class="material-symbols-outlined">settings</span> 
                                 Settings</a>
                             </li>
@@ -191,67 +354,40 @@ mysqli_close($connection);
                 </div>
             </div>
 
-            <div class="projectCard">
-                <div class="projectTop">
-                    <h2>Task 01<br><span>Task name</span></h2>
-                    <div class="projectDots">
-                        <span class="material-symbols-outlined">
-                            more_horiz
-                        </span>
-                    </div>
-                </div>
+            <?php 
+            //display task
+            include 'DataBaseConnection\DataBaseConnection.php';
 
-                <div class="projectProgress">
-                    <div class="process">
-                        <h2>In Progress</h2>
-                    </div>
-                    <div class="priority">
-                        <h2>High Priority</h2>
-                    </div>
-                </div>
+            //get task
+            $sql = "SELECT * FROM task WHERE UserEmail = '$UserEmail' AND TaskStatus != 'COMPLETED' AND DueDate = CURDATE()";
+            $result = mysqli_query($connection, $sql);
 
-                <div class="projectDiscription">
-                    <h2>Task Description</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec odio nec nunc
-                        consectetur
-                        ultricies. Donec auctor, nunc nec ultricies.</p>
-                </div>
+            $list = new LinkedList();
 
-                <div class="date">
-                    <h2>Due Date <br><span>2024-08-07</span></h2>
-                </div>
-            </div>
+            if (mysqli_num_rows($result) > 0) {
+                while($row = mysqli_fetch_assoc($result)) {
+                    $list->addEnd($row['TaskName'], $row['TaskDescription'], $row['TaskStatus'], $row['TaskPriority'], $row['DueDate']);
+                }
+            }
+            else {
+                echo '<script>
+                        var confirmMsg = confirm("No task found.");
+                        if (confirmMsg) {
+                            window.location.href = "AddTask.php";
+                        }
+                    </script>';
+                exit();
+            }
 
-            <div class="projectCard">
-                <div class="projectTop">
-                    <h2>Task 02<br><span>Task name</span></h2>
-                    <div class="projectDots">
-                        <span class="material-symbols-outlined">
-                            more_horiz
-                        </span>
-                    </div>
-                </div>
+            //close connection
+            mysqli_close($connection);
 
-                <div class="projectProgress">
-                    <div class="process">
-                        <h2>In Progress</h2>
-                    </div>
-                    <div class="priority">
-                        <h2>Low Priority</h2>
-                    </div>
-                </div>
+            //sort linked list
+            $list->sort();
 
-                <div class="projectDiscription">
-                    <h2>Task Description</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec odio nec nunc
-                        consectetur
-                        ultricies. Donec auctor, nunc nec ultricies.</p>
-                </div>
-
-                <div class="date">
-                    <h2>Due Date <br><span>2024-08-07</span></h2>
-                </div>
-            </div>
+            //display task
+            $list->display();
+            ?>
         </main>
     </div>
     <script src="JavaScript/script.js"></script>

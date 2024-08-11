@@ -134,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['taskId'])) {
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="ViewProfile.php">
                                 <span class="material-symbols-outlined">account_circle</span>
                                 <span class="title">Profile</span>
                             </a>
@@ -142,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['taskId'])) {
                     </ul>
                 </nav>
                 <div class="logout">
-                    <button>
+                    <button onclick="window.location.href = 'LogOut.php';">
                         <span class="material-symbols-outlined">logout</span> Log Out
                     </button>
                 </div>
@@ -158,11 +158,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['taskId'])) {
                     <span class="material-symbols-outlined" id="accountIcon">account_circle</span>
                     <div class="dropdown">
                         <ul>
-                            <li><a href="#" class="dropdown-item">
+                            <li><a href="ViewProfile.php" class="dropdown-item">
                                 <span class="material-symbols-outlined">account_circle</span> 
                                 Profile</a>
                             </li>
-                            <li><a href="#" class="dropdown-item">
+                            <li><a href="ViewProfile.php" class="dropdown-item">
                                 <span class="material-symbols-outlined">settings</span> 
                                 Settings</a>
                             </li>

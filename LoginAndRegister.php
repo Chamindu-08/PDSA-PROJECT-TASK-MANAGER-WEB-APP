@@ -117,18 +117,19 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	font-family: 'Montserrat', sans-serif;
 }
 
-body{
-    background : url('Images/banner.png');
+body {
+    background: white;
     backdrop-filter: blur(2px) brightness(75%);
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
-	height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100vh;
 }
+
 
 .container{
 	background-color: white;

@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
     });
 
-    // Close the dropdown if clicked outside
+    //close the dropdown if clicked outside
     window.addEventListener('click', (e) => {
         if (!accountIcon.contains(e.target) && !dropdown.contains(e.target)) {
             dropdown.style.display = 'none';

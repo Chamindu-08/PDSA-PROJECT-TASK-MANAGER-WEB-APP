@@ -196,7 +196,7 @@ class LinkedList {
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="ViewProfile.php">
                                 <span class="material-symbols-outlined">account_circle</span>
                                 <span class="title">Profile</span>
                             </a>
@@ -204,7 +204,7 @@ class LinkedList {
                     </ul>
                 </nav>
                 <div class="logout">
-                    <button>
+                    <button onclick="window.location.href = 'LogOut.php';">
                         <span class="material-symbols-outlined">logout</span> Log Out
                     </button>
                 </div>
@@ -220,11 +220,11 @@ class LinkedList {
                     <span class="material-symbols-outlined" id="accountIcon">account_circle</span>
                     <div class="dropdown">
                         <ul>
-                            <li><a href="#" class="dropdown-item">
+                            <li><a href="ViewProfile.php" class="dropdown-item">
                                 <span class="material-symbols-outlined">account_circle</span> 
                                 Profile</a>
                             </li>
-                            <li><a href="#" class="dropdown-item">
+                            <li><a href="ViewProfile.php" class="dropdown-item">
                                 <span class="material-symbols-outlined">settings</span> 
                                 Settings</a>
                             </li>
@@ -289,6 +289,7 @@ class LinkedList {
                             //get tasks from database
                             include 'DataBaseConnection\DataBaseConnection.php';
 
+                            //get tasks due today
                             $sql = "SELECT TaskName, TaskStatus, TaskPriority FROM task WHERE UserEmail = '$UserEmail' AND DueDate = CURDATE()";
                             $result = mysqli_query($connection, $sql);
 
@@ -299,6 +300,7 @@ class LinkedList {
                                 }
                                 $list->Display();
                             } else {
+                                //no tasks due today
                                 echo '<li>
                                         <span class="tasksIconName">
                                             <span class="tasksIcon done">
