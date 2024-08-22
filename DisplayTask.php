@@ -19,7 +19,7 @@ if(isset($_COOKIE['UserEmail'])){
 include 'DataBaseConnection\DataBaseConnection.php';
 
 //get task count
-$sql = "SELECT COUNT(TaskStatus) AS TaskCompleted FROM task WHERE TaskStatus = 'COMPLETED' AND UserEmail = '$UserEmail'";
+$sql = "SELECT COUNT(TaskStatus) AS TaskCompleted FROM task WHERE TaskStatus = 'COMPLETED' AND UserEmail = '$UserEmail' AND DueDate = CURDATE()";
 $result = mysqli_query($connection, $sql);
 
 if (mysqli_num_rows($result) > 0) {
@@ -31,7 +31,7 @@ if (mysqli_num_rows($result) > 0) {
 }
 
 //get task count
-$sql = "SELECT COUNT(TaskStatus) AS TaskPending FROM task WHERE TaskStatus = 'PENDING' AND UserEmail = '$UserEmail'";
+$sql = "SELECT COUNT(TaskStatus) AS TaskPending FROM task WHERE TaskStatus = 'PENDING' AND UserEmail = '$UserEmail' AND DueDate = CURDATE()";
 $result = mysqli_query($connection, $sql);
 
 if (mysqli_num_rows($result) > 0) {
@@ -43,7 +43,7 @@ if (mysqli_num_rows($result) > 0) {
 }
 
 //get task count
-$sql = "SELECT COUNT(TaskStatus) AS TaskOverdue FROM task WHERE TaskStatus = 'OVERDUE' AND UserEmail = '$UserEmail'";
+$sql = "SELECT COUNT(TaskStatus) AS TaskOverdue FROM task WHERE TaskStatus = 'OVERDUE' AND UserEmail = '$UserEmail' AND DueDate = CURDATE()";
 $result = mysqli_query($connection, $sql);
 
 if (mysqli_num_rows($result) > 0) {
@@ -111,6 +111,46 @@ class LinkedList {
 
                 while ($index != null) {
                     if ($this->priorityToValue($current->TaskPriority) > $this->priorityToValue($index->TaskPriority)) {
+                        $tempTaskName = $current->TaskName;
+                        $current->TaskName = $index->TaskName;
+                        $index->TaskName = $tempTaskName;
+
+                        $tempTaskDescription = $current->TaskDescription;
+                        $current->TaskDescription = $index->TaskDescription;
+                        $index->TaskDescription = $tempTaskDescription;
+
+                        $tempTaskStatus = $current->TaskStatus;
+                        $current->TaskStatus = $index->TaskStatus;
+                        $index->TaskStatus = $tempTaskStatus;
+
+                        $tempTaskPriority = $current->TaskPriority;
+                        $current->TaskPriority = $index->TaskPriority;
+                        $index->TaskPriority = $tempTaskPriority;
+
+                        $tempDueDate = $current->DueDate;
+                        $current->DueDate = $index->DueDate;
+                        $index->DueDate = $tempDueDate;
+                    } 
+                    $index = $index->Next;
+                }
+                $current = $current->Next;
+            }
+        }
+    }
+
+    //sort linked list low to high
+    public function sortLowToHigh() {
+        $current = $this->head;
+        $index = null;
+
+        if ($this->head == null) {
+            return;
+        } else {
+            while ($current != null) {
+                $index = $current->Next;
+
+                while ($index != null) {
+                    if ($this->priorityToValue($current->TaskPriority) < $this->priorityToValue($index->TaskPriority)) {
                         $tempTaskName = $current->TaskName;
                         $current->TaskName = $index->TaskName;
                         $index->TaskName = $tempTaskName;
@@ -230,6 +270,7 @@ class LinkedList {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task</title>
     <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="CSS\taskStyle.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
@@ -353,6 +394,20 @@ class LinkedList {
                     </div>
                 </div>
             </div>
+            <!-- select task order -->
+            <div class="taskOrder">
+                <div class="taskOrderTitle">
+                    <h2>Task Order</h2>
+                </div>
+                <div class="taskOrderMain">
+                    <form method="GET" action="DisplayTask.php">
+                        <select class = "taskOrderSelect" name="taskOrder" onchange="this.form.submit()">
+                            <option value="high" <?php if (!isset($_GET['taskOrder']) || $_GET['taskOrder'] == 'high') echo 'selected'; ?>>High to Low</option>
+                            <option value="low" <?php if (isset($_GET['taskOrder']) && $_GET['taskOrder'] == 'low') echo 'selected'; ?>>Low to High</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
 
             <?php 
             //display task
@@ -368,8 +423,7 @@ class LinkedList {
                 while($row = mysqli_fetch_assoc($result)) {
                     $list->addEnd($row['TaskName'], $row['TaskDescription'], $row['TaskStatus'], $row['TaskPriority'], $row['DueDate']);
                 }
-            }
-            else {
+            } else {
                 echo '<script>
                         var confirmMsg = confirm("No task found.");
                         if (confirmMsg) {
@@ -382,12 +436,17 @@ class LinkedList {
             //close connection
             mysqli_close($connection);
 
-            //sort linked list
-            $list->sort();
+            //sort task
+            if (!isset($_GET['taskOrder']) || $_GET['taskOrder'] == 'high') {
+                $list->sort();
+            } else {
+                $list->sortLowToHigh();
+            }
 
             //display task
             $list->display();
             ?>
+
         </main>
     </div>
     <script src="JavaScript/script.js"></script>

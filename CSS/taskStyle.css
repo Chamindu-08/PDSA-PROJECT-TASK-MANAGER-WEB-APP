@@ -1,0 +1,52 @@
+/* task oder */
+.taskOrder {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+.taskOrderTitle h2 {
+    font-size: 1.5em;
+    font-weight: 500;
+    color: black
+}
+
+.taskOrderMain {
+    display: flex;
+    align-items: center;
+}
+
+.taskOrderSelect {
+    width: 200px;
+    height: 40px;
+    background-color: #fff;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0 10px;
+    font-size: 1em;
+    color: #333;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.taskOrderSelect option {
+    font-size: 1em;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0 10px;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}

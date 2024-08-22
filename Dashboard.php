@@ -19,7 +19,7 @@ if(isset($_COOKIE['UserEmail'])){
 include 'DataBaseConnection\DataBaseConnection.php';
 
 //get task count
-$sql = "SELECT COUNT(TaskStatus) AS TaskCompleted FROM task WHERE TaskStatus = 'COMPLETED' AND UserEmail = '$UserEmail'";
+$sql = "SELECT COUNT(TaskStatus) AS TaskCompleted FROM task WHERE TaskStatus = 'COMPLETED' AND UserEmail = '$UserEmail' AND DueDate = CURDATE()";
 $result = mysqli_query($connection, $sql);
 
 if (mysqli_num_rows($result) > 0) {
@@ -31,7 +31,7 @@ if (mysqli_num_rows($result) > 0) {
 }
 
 //get task count
-$sql = "SELECT COUNT(TaskStatus) AS TaskPending FROM task WHERE TaskStatus = 'PENDING' AND UserEmail = '$UserEmail'";
+$sql = "SELECT COUNT(TaskStatus) AS TaskPending FROM task WHERE TaskStatus = 'PENDING' AND UserEmail = '$UserEmail' AND DueDate = CURDATE()";
 $result = mysqli_query($connection, $sql);
 
 if (mysqli_num_rows($result) > 0) {
@@ -43,7 +43,7 @@ if (mysqli_num_rows($result) > 0) {
 }
 
 //get task count
-$sql = "SELECT COUNT(TaskStatus) AS TaskOverdue FROM task WHERE TaskStatus = 'OVERDUE' AND UserEmail = '$UserEmail'";
+$sql = "SELECT COUNT(TaskStatus) AS TaskOverdue FROM task WHERE TaskStatus = 'OVERDUE' AND UserEmail = '$UserEmail' AND DueDate = CURDATE()";
 $result = mysqli_query($connection, $sql);
 
 if (mysqli_num_rows($result) > 0) {
@@ -62,37 +62,61 @@ class Node {
     public $TaskStatus;
     public $TaskPriority;
     public $Next;
+
+    public function __construct($TaskName, $TaskStatus, $TaskPriority) {
+        $this->TaskName = $TaskName;
+        $this->TaskStatus = $TaskStatus;
+        $this->TaskPriority = $TaskPriority;
+        $this->Next = null;
+    }
 }
 
 class LinkedList {
     public $Head;
 
+    //constructor
     public function __construct() {
         $this->Head = null;
     }
 
+    //add task
     public function Add($taskName, $taskStatus, $taskPriority) {
-        $newNode = new Node();
-        $newNode->TaskName = $taskName;
-        $newNode->TaskStatus = $taskStatus;
-        $newNode->TaskPriority = $taskPriority;
-        $newNode->Next = null;
+        $newNode = new Node($taskName, $taskStatus, $taskPriority);
 
         if($this->Head == null) {
             $this->Head = $newNode;
         } else {
-            $last = $this->Head;
-            while($last->Next != null) {
-                $last = $last->Next;
+            $current = $this->Head;
+            while($current->Next != null) {
+                $current = $current->Next;
             }
-            $last->Next = $newNode;
+            $current->Next = $newNode;
         }
     }
 
+    //delete task
+    public function Delete($taskName) {
+        $current = $this->Head;
+        $previous = null;
+
+        while($current != null) {
+            if($current->TaskName == $taskName) {
+                if($previous == null) {
+                    $this->Head = $current->Next;
+                } else {
+                    $previous->Next = $current->Next;
+                }
+                return;
+            }
+            $previous = $current;
+            $current = $current->Next;
+        }
+    }
+
+    //display tasks
     public function Display() {
         $current = $this->Head;
         while($current != null) {
-            //display task
             //check task status
             if($current->TaskStatus == 'COMPLETED') {
                 $taskIcon = '<span class="tasksIcon done">
